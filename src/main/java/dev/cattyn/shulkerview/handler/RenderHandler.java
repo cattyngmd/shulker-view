@@ -133,7 +133,7 @@ public class RenderHandler implements Globals {
 
     private void drawBackground(DrawContext context, int x, int y, int width, int color) {
         int background = config.getBackground();
-        context.fill(x, y, x + width, y + rows, background);
+        context.fill(x, y, x + width, y + rows * GRID_HEIGHT + 4, background);
         context.fill(x, y - 1, x + width, y, color);
     }
 
