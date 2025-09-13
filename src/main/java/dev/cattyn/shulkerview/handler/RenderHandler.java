@@ -1,7 +1,7 @@
 package dev.cattyn.shulkerview.handler;
 
 import dev.cattyn.shulkerview.Globals;
-import dev.cattyn.shulkerview.ShulkerViewEntrypoint;
+import dev.cattyn.shulkerview.config.ShulkerViewConfig;
 import dev.cattyn.shulkerview.mixin.DuckHandledScreen;
 import dev.cattyn.shulkerview.utils.ShulkerInfo;
 import net.minecraft.client.gui.DrawContext;
@@ -18,31 +18,41 @@ public class RenderHandler implements Globals {
     private static final int GRID_WIDTH = 20;
     private static final int GRID_HEIGHT = 18;
 
+    private final ShulkerViewConfig config;
+    private final UpdateHandler updates;
+
     private final Vector2d clicked = new Vector2d();
     private int height, offset;
     private int rows, cols;
 
     private int startX;
     private int currentY;
+    private float scale;
+
+    public RenderHandler(ShulkerViewConfig config, UpdateHandler updates) {
+        this.config = config;
+        this.updates = updates;
+    }
 
     public void render(DrawContext context, double mouseX, double mouseY) {
+        scale = config.getScale();
         boolean right = false;
         startX = MARGIN;
-        currentY = usesBoth() ? MARGIN : MARGIN + offset;
+        currentY = config.isBothSides() ? MARGIN : MARGIN + offset;
 
         context.getMatrices().push();
-        context.getMatrices().scale(scale(), scale(), 1);
-        for (ShulkerInfo shulkerInfo : ShulkerViewEntrypoint.getInstance().getUpdateHandler().getShulkerList()) {
+        context.getMatrices().scale(scale, scale, 1);
+        for (ShulkerInfo shulkerInfo : updates.getShulkerList()) {
             updateShulkerInfo(shulkerInfo);
 
-            if (currentY >= context.getScaledWindowHeight() / scale() && usesBoth() && !right) {
+            if (currentY >= context.getScaledWindowHeight() / scale && config.isBothSides() && !right) {
                 right = true;
                 currentY = MARGIN + offset;
             }
 
             if (right) {
-                float scaledGridWidth = GRID_WIDTH * scale();
-                startX = (int) ((context.getScaledWindowWidth() - cols * scaledGridWidth - MARGIN) / scale());
+                float scaledGridWidth = GRID_WIDTH * scale;
+                startX = (int) ((context.getScaledWindowWidth() - cols * scaledGridWidth - MARGIN) / scale);
             }
             drawShulkerInfo(context, shulkerInfo, mouseX, mouseY);
         }
@@ -62,7 +72,9 @@ public class RenderHandler implements Globals {
         int y = currentY;
         int count = 0;
 
-        if (currentY * scale() < context.getScaledWindowHeight()) {
+        if (currentY * scale < context.getScaledWindowHeight()) {
+            drawBackground(context, x, y, width, info.color());
+
             for (ItemStack stack : info.stacks()) {
                 if (info.compact() && stack.isEmpty()) break;
                 int column = x + (count % 9) * GRID_WIDTH + MARGIN;
@@ -76,14 +88,9 @@ public class RenderHandler implements Globals {
             if (count == 0 && info.compact()) {
                 context.drawItem(info.shulker(), x + MARGIN, currentY + MARGIN);
             }
-            if (clicked.lengthSquared() != 0 && isHovered(clicked.x, clicked.y, width, rows)) {
-                int id = mc.player.currentScreenHandler.syncId;
-                mc.interactionManager.clickSlot(id, info.slot(), 0, SlotActionType.PICKUP, mc.player);
-                clicked.set(0);
-            }
-            int background = ShulkerViewEntrypoint.getInstance().getConfig().getBackground();
-            context.fill(x, y, x + width, y + rows, background);
-            context.fill(x, y - 1, x + width, y, info.color());
+
+            if (clicked.lengthSquared() != 0 && isHovered(clicked.x, clicked.y, width, rows))
+                clickShulker(info);
         }
         currentY += rows + MARGIN;
     }
@@ -101,7 +108,7 @@ public class RenderHandler implements Globals {
                 return;
         }
 
-        float f = Math.min(-height + mc.getWindow().getScaledHeight() / scale(), 0);
+        float f = Math.min(-height + mc.getWindow().getScaledHeight() / scale, 0);
         this.offset = (int) MathHelper.clamp(offset + Math.ceil(amount) * 10, f,0);
     }
 
@@ -116,12 +123,24 @@ public class RenderHandler implements Globals {
     }
 
     private void drawTooltip(DrawContext ctx, ItemStack stack, double mouseX, double mouseY) {
-        if (!tooltips() || stack.isEmpty()) return;
-        float f = 1f/ scale();
+        if (!config.isTooltips() || stack.isEmpty()) return;
+        float f = 1f / scale;
         ctx.getMatrices().push();
         ctx.getMatrices().scale(f, f, 1);
         ctx.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
         ctx.getMatrices().pop();
+    }
+
+    private void drawBackground(DrawContext context, int x, int y, int width, int color) {
+        int background = config.getBackground();
+        context.fill(x, y, x + width, y + rows, background);
+        context.fill(x, y - 1, x + width, y, color);
+    }
+
+    private void clickShulker(ShulkerInfo info) {
+        int id = mc.player.currentScreenHandler.syncId;
+        mc.interactionManager.clickSlot(id, info.slot(), 0, SlotActionType.PICKUP, mc.player);
+        clicked.set(0);
     }
 
     private void updateShulkerInfo(ShulkerInfo info) {
@@ -141,26 +160,14 @@ public class RenderHandler implements Globals {
     }
 
     private boolean isHovered(double x, double y, float cols, float rows) {
-        x /= scale();
-        y /= scale();
+        x /= scale;
+        y /= scale;
         return x >= startX && x <= startX + cols && y >= currentY && y <= currentY + rows;
     }
 
     private boolean isHoveredItem(double mouseX, double mouseY, int x, int y) {
-        mouseX /= scale();
-        mouseY /= scale();
+        mouseX /= scale;
+        mouseY /= scale;
         return mouseX >= x && mouseX <= x + GRID_WIDTH && mouseY >= y && mouseY <= y + GRID_HEIGHT;
-    }
-
-    private boolean usesBoth() {
-        return ShulkerViewEntrypoint.getInstance().getConfig().isBothSides();
-    }
-
-    private float scale() {
-        return ShulkerViewEntrypoint.getInstance().getConfig().getScale();
-    }
-
-    private boolean tooltips() {
-        return ShulkerViewEntrypoint.getInstance().getConfig().isTooltips();
     }
 }
