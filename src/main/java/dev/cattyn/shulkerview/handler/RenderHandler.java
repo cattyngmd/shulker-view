@@ -44,7 +44,7 @@ public class RenderHandler implements Globals {
                 float scaledGridWidth = GRID_WIDTH * scale();
                 startX = (int) ((context.getScaledWindowWidth() - cols * scaledGridWidth - MARGIN) / scale());
             }
-            drawShulkerInfo(context, shulkerInfo);
+            drawShulkerInfo(context, shulkerInfo, mouseX, mouseY);
         }
         context.draw();
         context.getMatrices().pop();
@@ -53,7 +53,7 @@ public class RenderHandler implements Globals {
         clicked.set(0);
     }
 
-    private void drawShulkerInfo(DrawContext context, ShulkerInfo info) {
+    private void drawShulkerInfo(DrawContext context, ShulkerInfo info, double mouseX, double mouseY) {
         int cols = this.cols * GRID_HEIGHT;
         int rows = this.rows * GRID_WIDTH;
         int width = cols + MARGIN * this.cols;
@@ -68,6 +68,8 @@ public class RenderHandler implements Globals {
                 int column = x + (count % 9) * GRID_WIDTH + MARGIN;
                 int row = y + count / 9 * GRID_HEIGHT + MARGIN;
                 drawStack(context, stack, column, row);
+                if (isHoveredItem(mouseX, mouseY, column, row))
+                    drawTooltip(context, stack, mouseX, mouseY);
                 count++;
             }
 
@@ -103,12 +105,6 @@ public class RenderHandler implements Globals {
         this.offset = (int) MathHelper.clamp(offset + Math.ceil(amount) * 10, f,0);
     }
 
-    private boolean isHovered(double x, double y, float cols, float rows) {
-        x /= scale();
-        y /= scale();
-        return x >= startX && x <= startX + cols && y >= currentY && y <= currentY + rows;
-    }
-
     private void drawStack(DrawContext ctx, ItemStack stack, int x, int y) {
         ctx.drawItem(stack, x, y);
         if (stack.getCount() > 999) {
@@ -117,6 +113,15 @@ public class RenderHandler implements Globals {
         } else {
             ctx.drawStackOverlay(mc.textRenderer, stack, x, y);
         }
+    }
+
+    private void drawTooltip(DrawContext ctx, ItemStack stack, double mouseX, double mouseY) {
+        if (!tooltips() || stack.isEmpty()) return;
+        float f = 1f/ scale();
+        ctx.getMatrices().push();
+        ctx.getMatrices().scale(f, f, 1);
+        ctx.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+        ctx.getMatrices().pop();
     }
 
     private void updateShulkerInfo(ShulkerInfo info) {
@@ -135,11 +140,27 @@ public class RenderHandler implements Globals {
         cols = MathHelper.clamp(size, 1, 9);
     }
 
+    private boolean isHovered(double x, double y, float cols, float rows) {
+        x /= scale();
+        y /= scale();
+        return x >= startX && x <= startX + cols && y >= currentY && y <= currentY + rows;
+    }
+
+    private boolean isHoveredItem(double mouseX, double mouseY, int x, int y) {
+        mouseX /= scale();
+        mouseY /= scale();
+        return mouseX >= x && mouseX <= x + GRID_WIDTH && mouseY >= y && mouseY <= y + GRID_HEIGHT;
+    }
+
     private boolean usesBoth() {
         return ShulkerViewEntrypoint.getInstance().getConfig().isBothSides();
     }
 
     private float scale() {
         return ShulkerViewEntrypoint.getInstance().getConfig().getScale();
+    }
+
+    private boolean tooltips() {
+        return ShulkerViewEntrypoint.getInstance().getConfig().isTooltips();
     }
 }
