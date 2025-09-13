@@ -12,6 +12,7 @@ public class ShulkerViewConfig implements ConfigData {
     private int background = Color.ofRGBA(0, 0, 0, 75).hashCode();
     private boolean compact = true;
     private boolean bothSides = true;
+    private boolean tooltips = true;
 
     @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
     private int scale = 10;
@@ -22,6 +23,10 @@ public class ShulkerViewConfig implements ConfigData {
 
     public boolean isBothSides() {
         return bothSides;
+    }
+
+    public boolean isTooltips() {
+        return tooltips;
     }
 
     public int getBackground() {

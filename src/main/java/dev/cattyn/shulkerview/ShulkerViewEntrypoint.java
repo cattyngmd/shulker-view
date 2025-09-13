@@ -12,13 +12,12 @@ public class ShulkerViewEntrypoint implements ModInitializer, ClientModInitializ
     private static ShulkerViewEntrypoint INSTANCE;
     private RenderHandler renderHandler;
     private UpdateHandler updateHandler;
-    private ShulkerViewConfig config;
 
     @Override public void onInitializeClient() {
+        ShulkerViewConfig config = AutoConfig.getConfigHolder(ShulkerViewConfig.class).getConfig();
+        this.updateHandler = new UpdateHandler(config);
+        this.renderHandler = new RenderHandler(config, updateHandler);
         INSTANCE = this;
-        this.config = AutoConfig.getConfigHolder(ShulkerViewConfig.class).getConfig();
-        this.updateHandler = new UpdateHandler();
-        this.renderHandler = new RenderHandler();
     }
 
     @Override public void onInitialize() {
@@ -31,10 +30,6 @@ public class ShulkerViewEntrypoint implements ModInitializer, ClientModInitializ
 
     public UpdateHandler getUpdateHandler() {
         return updateHandler;
-    }
-
-    public ShulkerViewConfig getConfig() {
-        return config;
     }
 
     public static ShulkerViewEntrypoint getInstance() {
