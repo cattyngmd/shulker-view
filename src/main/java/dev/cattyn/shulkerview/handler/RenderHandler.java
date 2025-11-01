@@ -40,8 +40,9 @@ public class RenderHandler implements Globals {
         startX = MARGIN;
         currentY = config.isBothSides() ? MARGIN : MARGIN + offset;
 
-        context.getMatrices().push();
-        context.getMatrices().scale(scale, scale, 1);
+        context.createNewRootLayer();
+        context.getMatrices().pushMatrix();
+        context.getMatrices().scale(scale, scale);
         for (ShulkerInfo shulkerInfo : updates.getShulkerList()) {
             updateShulkerInfo(shulkerInfo);
 
@@ -56,8 +57,7 @@ public class RenderHandler implements Globals {
             }
             drawShulkerInfo(context, shulkerInfo, mouseX, mouseY);
         }
-        context.draw();
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
 
         height = currentY - offset;
         clicked.set(0);
@@ -125,15 +125,15 @@ public class RenderHandler implements Globals {
     private void drawTooltip(DrawContext ctx, ItemStack stack, double mouseX, double mouseY) {
         if (!config.isTooltips() || stack.isEmpty()) return;
         float f = 1f / scale;
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(f, f, 1);
+        ctx.getMatrices().pushMatrix();
+        ctx.getMatrices().scale(f, f);
         ctx.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
-        ctx.getMatrices().pop();
+        ctx.getMatrices().popMatrix();
     }
 
     private void drawBackground(DrawContext context, int x, int y, int width, int color) {
         int background = config.getBackground();
-        context.fill(x, y, x + width, y + rows, background);
+        context.fill(x, y, x + width, y + rows * GRID_HEIGHT + 4, background);
         context.fill(x, y - 1, x + width, y, color);
     }
 
