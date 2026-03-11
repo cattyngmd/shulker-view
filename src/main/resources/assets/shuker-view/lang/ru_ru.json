@@ -3,7 +3,7 @@
   "shulker-view.midnightconfig.compact": "Компактный Режим",
   "shulker-view.midnightconfig.bothSides": "Распределить По Сторонам",
   "shulker-view.midnightconfig.tooltips": "Подсказки",
-  "shulker-view.midnightconfig.background": "Цвет Заднего Фона",
+  "shulker-view.midnightconfig.backgroundAlpha": "Прозрачность Заднего Фона",
   "shulker-view.midnightconfig.scale": "Размер Сетки",
   "modmenu.descriptionTranslation.shulker-view": "Мод который улучшает управление шалкерами."
 }

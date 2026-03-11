@@ -3,7 +3,7 @@
   "shulker-view.midnightconfig.compact": "Compact Layout",
   "shulker-view.midnightconfig.bothSides": "Use Both Sides",
   "shulker-view.midnightconfig.tooltips": "Tooltips",
-  "shulker-view.midnightconfig.background": "Background Color",
+  "shulker-view.midnightconfig.backgroundAlpha": "Background Color Opacity",
   "shulker-view.midnightconfig.scale": "Layout Scale",
   "modmenu.descriptionTranslation.shulker-view": "Mod that improves shulker management."
 }
