@@ -1,6 +1,7 @@
 package dev.cattyn.shulkerview.mixin;
 
 import dev.cattyn.shulkerview.ShulkerViewEntrypoint;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -29,8 +30,8 @@ public class MixinHandledScreen extends Screen {
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
-    private void mouseClickedHook(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        ShulkerViewEntrypoint.getInstance().getRenderHandler().mouseClick(mouseX, mouseY, button);
+    private void mouseClickedHook(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+        ShulkerViewEntrypoint.getInstance().getRenderHandler().mouseClick(click);
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"))

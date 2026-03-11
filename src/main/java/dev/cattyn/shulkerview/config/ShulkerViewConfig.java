@@ -1,39 +1,14 @@
 package dev.cattyn.shulkerview.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.math.Color;
+import eu.midnightdust.lib.config.MidnightConfig;
 
-@Config(name = "shulker-view")
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
-public class ShulkerViewConfig implements ConfigData {
-    @ConfigEntry.ColorPicker(allowAlpha = true)
-    private int background = Color.ofRGBA(0, 0, 0, 75).hashCode();
-    private boolean compact = true;
-    private boolean bothSides = true;
-    private boolean tooltips = true;
+public final class ShulkerViewConfig extends MidnightConfig {
+    @Entry(isSlider = true, min = 0, max = 100) public static int backgroundAlpha = 30;
 
-    @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
-    private int scale = 10;
+    @Entry public static boolean compact = true;
+    @Entry public static boolean bothSides = true;
+    @Entry public static boolean tooltips = true;
 
-    public boolean isCompact() {
-        return compact;
-    }
-
-    public boolean isBothSides() {
-        return bothSides;
-    }
-
-    public boolean isTooltips() {
-        return tooltips;
-    }
-
-    public int getBackground() {
-        return background;
-    }
-
-    public float getScale() {
-        return scale / 10f;
-    }
+    @Entry(isSlider = true, min = 1, max = 20) public static int scale = 10;
 }

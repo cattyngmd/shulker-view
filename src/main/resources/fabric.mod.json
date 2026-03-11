@@ -17,9 +17,6 @@
     "client": [
       "dev.cattyn.shulkerview.ShulkerViewEntrypoint"
     ],
-    "main": [
-      "dev.cattyn.shulkerview.ShulkerViewEntrypoint"
-    ],
     "modmenu": [
       "dev.cattyn.shulkerview.config.ModMenuIntegration"
     ]

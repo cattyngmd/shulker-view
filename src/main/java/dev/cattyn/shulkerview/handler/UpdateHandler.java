@@ -1,7 +1,7 @@
 package dev.cattyn.shulkerview.handler;
 
 import dev.cattyn.shulkerview.Globals;
-import dev.cattyn.shulkerview.config.ShulkerViewConfig;
+import dev.cattyn.shulkerview.config.ConfigProvider;
 import dev.cattyn.shulkerview.utils.ShulkerInfo;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -11,9 +11,9 @@ import net.minecraft.screen.slot.Slot;
 
 public class UpdateHandler implements Globals {
     private final ObjectList<ShulkerInfo> shulkerList = ObjectLists.synchronize(new ObjectArrayList<>());
-    private final ShulkerViewConfig config;
+    private final ConfigProvider config;
 
-    public UpdateHandler(ShulkerViewConfig config) {
+    public UpdateHandler(ConfigProvider config) {
         this.config = config;
     }
 

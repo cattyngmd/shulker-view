@@ -1,9 +1,9 @@
 {
-  "text.autoconfig.shulker-view.title": "Shulker View",
-  "text.autoconfig.shulker-view.option.compact": "Compact Layout",
-  "text.autoconfig.shulker-view.option.bothSides": "Use Both Sides",
-  "text.autoconfig.shulker-view.option.tooltips": "Tooltips",
-  "text.autoconfig.shulker-view.option.background": "Background Color",
-  "text.autoconfig.shulker-view.option.scale": "Layout Scale",
+  "shulker-view.midnightconfig.title": "Shulker View",
+  "shulker-view.midnightconfig.compact": "Compact Layout",
+  "shulker-view.midnightconfig.bothSides": "Use Both Sides",
+  "shulker-view.midnightconfig.tooltips": "Tooltips",
+  "shulker-view.midnightconfig.background": "Background Color",
+  "shulker-view.midnightconfig.scale": "Layout Scale",
   "modmenu.descriptionTranslation.shulker-view": "Mod that improves shulker management."
 }

@@ -1,6 +1,6 @@
 package dev.cattyn.shulkerview.utils;
 
-import dev.cattyn.shulkerview.config.ShulkerViewConfig;
+import dev.cattyn.shulkerview.config.ConfigProvider;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
@@ -17,7 +17,7 @@ import static dev.cattyn.shulkerview.utils.Utils.getColor;
 
 public record ShulkerInfo(ItemStack shulker, boolean compact, int color, int slot, List<ItemStack> stacks) {
 
-    public static ShulkerInfo create(ShulkerViewConfig config, ItemStack stack, int slot) {
+    public static ShulkerInfo create(ConfigProvider config, ItemStack stack, int slot) {
         ShulkerBoxBlock block = getBlock(stack);
         if (block == null) return null;
 

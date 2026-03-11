@@ -1,9 +1,10 @@
 package dev.cattyn.shulkerview.handler;
 
 import dev.cattyn.shulkerview.Globals;
-import dev.cattyn.shulkerview.config.ShulkerViewConfig;
+import dev.cattyn.shulkerview.config.ConfigProvider;
 import dev.cattyn.shulkerview.mixin.DuckHandledScreen;
 import dev.cattyn.shulkerview.utils.ShulkerInfo;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,7 +19,7 @@ public class RenderHandler implements Globals {
     private static final int GRID_WIDTH = 20;
     private static final int GRID_HEIGHT = 18;
 
-    private final ShulkerViewConfig config;
+    private final ConfigProvider config;
     private final UpdateHandler updates;
 
     private final Vector2d clicked = new Vector2d();
@@ -29,7 +30,7 @@ public class RenderHandler implements Globals {
     private int currentY;
     private float scale;
 
-    public RenderHandler(ShulkerViewConfig config, UpdateHandler updates) {
+    public RenderHandler(ConfigProvider config, UpdateHandler updates) {
         this.config = config;
         this.updates = updates;
     }
@@ -95,9 +96,9 @@ public class RenderHandler implements Globals {
         currentY += rows + MARGIN;
     }
 
-    public void mouseClick(double x, double y, int button) {
-        if (button != 0) return;
-        clicked.set(x, y);
+    public void mouseClick(Click click) {
+        if (click.button() != 0) return;
+        clicked.set(click.x(), click.y());
     }
 
     public void mouseScroll(double x, double y, double amount) {
